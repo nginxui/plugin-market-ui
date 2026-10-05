@@ -4,6 +4,7 @@ The plugin marketplace views of [Nginx UI](https://github.com/0xJacky/nginx-ui),
 shared with the store previews of the developer portal, so a preview looks
 exactly like the marketplace.
 
+- `MarketCard`: a plugin in the marketplace list.
 - `MarketDetail`: the detail of a plugin, below the title of its drawer.
 - `PermissionList`: the permissions a plugin asks for, with the author's notes.
 - `PluginIcon`: a plugin icon with its first letter until the image loads.

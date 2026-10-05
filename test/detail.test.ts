@@ -42,3 +42,17 @@ describe('market detail', () => {
     expect(wrapper.find('.pmu-shot.pmu-mark').attributes('data-mark')).toBe('Changed')
   })
 })
+
+describe('market card', () => {
+  it('shows the version, author, trust and the commercial tag', async () => {
+    const { default: MarketCard } = await import('../src/MarketCard.vue')
+    const wrapper = mount(MarketCard, { props: { entry: { ...entry, installable_release: { version: '1.2.0' } }, locale: 'en' }, slots: { foot: 'Install' } })
+    const text = wrapper.text()
+    expect(text).toContain('v1.2.0')
+    expect(text).toContain('Vendor')
+    expect(text).toContain('Verified')
+    expect(text).toContain('Commercial')
+    expect(wrapper.find('.pmu-card-trust').classes()).toContain('is-verified')
+    expect(wrapper.find('.pmu-card-foot').text()).toBe('Install')
+  })
+})

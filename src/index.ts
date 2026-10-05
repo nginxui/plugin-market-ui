@@ -1,6 +1,7 @@
 export { cropOf, cropStyles, shotUrl } from './crop'
 export { bundledText, interpolate, MARKET_LOCALES, provideMarketText, setMarketText, useMarketText } from './i18n'
 export type { Translate } from './i18n'
+export { default as MarketCard } from './MarketCard.vue'
 export { default as MarketDetail } from './MarketDetail.vue'
 export { default as PermissionList } from './PermissionList.vue'
 export { default as PluginIcon } from './PluginIcon.vue'
