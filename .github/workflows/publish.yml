@@ -1,0 +1,54 @@
+name: Publish
+
+# Stages @nginxui/plugin-market-ui on npm when a version tag is pushed. The
+# tag must match package.json, e.g. v0.1.0 for "version": "0.1.0". A staged
+# version is not live until a maintainer approves it with 2FA, through
+# `npm stage approve <id> --otp <code>` or on npmjs.com. npm authenticates
+# through trusted publishing (OIDC) bound to this workflow and the "npm"
+# environment; before that is set up, a stage only NPM_TOKEN secret in the
+# environment is used instead. npm attaches a provenance statement that links
+# the package to this workflow run.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+
+      # Staged publishing needs npm 11.15.0 or later.
+      - run: npm install -g npm@^11.15.0
+
+      - name: Check that the tag matches package.json
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version=$(node -p "require('./package.json').version")
+          if [ "${tag}" != "${version}" ]; then
+            echo "tag v${tag} does not match package.json version ${version}"
+            exit 1
+          fi
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run build
+
+      - run: bun run test
+
+      - name: npm stage publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm stage publish --provenance --access public

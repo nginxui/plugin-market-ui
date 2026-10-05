@@ -32,6 +32,12 @@ After a change of wording, refresh them from a checkout of Nginx UI:
 bun run messages ../nginx-ui/app/src/language
 ```
 
+## Releasing
+
+Bump `version` in package.json, commit, and push a matching tag such as
+`v0.1.0`. The Publish workflow stages the version on npm, and a maintainer
+approves it with 2FA before it goes live.
+
 ## Development
 
 ```sh
