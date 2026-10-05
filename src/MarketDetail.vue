@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Translate } from './i18n'
 import type { MarketEntry, MarketFact } from './types'
 import { GlobalOutlined, LinkOutlined } from '@antdv-next/icons'
 import { Flex as AFlex, Image as AImage, ImagePreviewGroup as AImagePreviewGroup, Tooltip as ATooltip } from 'antdv-next'
@@ -26,6 +27,8 @@ const props = withDefaults(defineProps<{
   addedPermissions?: string[]
   /** Parts to point out, by "description", "categories", "links", "permissions", "readme" or "shot:<id>", with a label each. */
   marks?: Record<string, string>
+  /** A translator for this detail alone, instead of the one given from above. */
+  translate?: Translate
 }>(), {
   dark: false,
   facts: () => [],
@@ -34,7 +37,8 @@ const props = withDefaults(defineProps<{
   marks: () => ({}),
 })
 
-const t = useMarketText()
+const provided = useMarketText()
+const t: Translate = (msgid, params) => (props.translate ?? provided)(msgid, params)
 
 const name = computed(() => localizedText(props.entry.name, props.locale) || props.entry.id)
 const description = computed(() => localizedText(props.entry.description, props.locale))

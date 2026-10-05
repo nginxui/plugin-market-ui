@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Translate } from './i18n'
 import type { MarketEntry } from './types'
 import { UserOutlined } from '@antdv-next/icons'
 import { Tooltip as ATooltip } from 'antdv-next'
@@ -16,11 +17,14 @@ const props = withDefaults(defineProps<{
   locale: string
   /** Opens the detail on a click, which the caller handles. */
   clickable?: boolean
+  /** A translator for this card alone, for cards in several languages side by side. */
+  translate?: Translate
 }>(), {
   clickable: false,
 })
 
-const t = useMarketText()
+const provided = useMarketText()
+const t: Translate = (msgid, params) => (props.translate ?? provided)(msgid, params)
 
 const name = computed(() => localizedText(props.entry.name, props.locale) || props.entry.id)
 const description = computed(() => localizedText(props.entry.description, props.locale))
